@@ -113,7 +113,7 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
 
 12. Add support for preemptible/spot instances in a Dataproc cluster
 
-    [main.tf](./modules/dataproc/main.tf)
+    [main.tf](https://github.com/MariuszPaluch2001/TBD-project/tree/master/modules/dataproc/main.tf)
     ```
     preemptible_worker_config {
       num_instances = var.spot_worker_count
@@ -126,7 +126,7 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     }
     ```
 
-    [variables.tf](./modules/dataproc/variables.tf)
+    [variables.tf](https://github.com/MariuszPaluch2001/TBD-project/tree/master/modules/dataproc/variables.tf)
     ```
     variable "spot_worker_count" {
       type        = number
