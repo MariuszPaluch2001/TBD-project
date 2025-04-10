@@ -24,3 +24,9 @@ variable "image_version" {
   type    = string
   default = "2.1.27-ubuntu20"
 }
+
+variable "spot_worker_count" {
+  type        = number
+  default     = 0
+  description = "Spot worker nodes count"
+}
