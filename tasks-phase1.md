@@ -76,19 +76,64 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
 ![img.png](doc/figures/infracost-output.png)
 
 10. Create a BigQuery dataset and an external table using SQL
-    
-    apply resources
 
-    ***place the code and output here***
+    ```sql
+    CREATE SCHEMA `tbd-2025l-310979.dataset`
+      OPTIONS (
+        location = 'europe-west1'
+      )
+    ```
+    ![](doc/figures/dataset_created.png)
+
+    ```sql
+    CREATE EXTERNAL TABLE `tbd-2025l-310979.dataset.shakespeare`
+      OPTIONS (
+        format ="orc",
+        uris = ['gs://tbd-2025l-310979-data/data/shakespeare/*.orc']
+      );
+    ```
+    ![](doc/figures/external_table_created.png)
+    ![](doc/figures/select_shakespeare.png)
    
-    ***why does ORC not require a table schema?***
+    ### Why does ORC not require a table schema?
+
+    ORC doesn’t need a table schema because it saves the schema inside the file itself. So when you read an ORC file, it already knows what the data looks like: column names, types, etc.
+
+    ### Other
+
+    To create the external table, it was necessary to fix the `spark-job.py` from the next task, as creating this table requires data along with the format (the ORC data format includes this).
 
 11. Find and correct the error in spark-job.py
 
-    ***describe the cause and how to find the error***
+    The issue was an incorrect path to the bucket where the processed data was supposed to be saved. The correct bucket path was provided, and the problem was resolved.
+    It could have been found in the line:  
+    ```
+    DATA_BUCKET = "gs://tbd-2025l-9900-data/data/shakespeare/"
+    ```
 
 12. Add support for preemptible/spot instances in a Dataproc cluster
 
-    ***place the link to the modified file and inserted terraform code***
-    
-    
+    [main.tf](./modules/dataproc/main.tf)
+    ```
+    spot_worker_config {
+      num_instances = var.spot_worker_count
+      machine_type  = var.machine_type
+      disk_config {
+        boot_disk_type    = "pd-standard"
+        boot_disk_size_gb = 100
+      }
+
+      preemptibility = "SPOT"
+    }
+    ```
+
+    [variables.tf](./modules/dataproc/variables.tf)
+    ```
+    variable "spot_worker_count" {
+      type        = number
+      default     = 0
+      description = "Spot worker nodes count"
+    }
+    ```
+
+    A variable `spot_worker_count` was created with a default value of 0. If a value greater than 0 is set, we can launch spot instances of virtual machines.
