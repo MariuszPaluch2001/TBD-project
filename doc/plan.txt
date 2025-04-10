@@ -1,0 +1,118 @@
+jwinter@jwinter-Precision-3470:~/TBD/TBD-project/modules/dataproc$ terraform plan
+var.project_name
+  Project name
+
+  Enter a value: tbd-2025l-310979
+
+var.subnet
+  VPC subnet used for deployment
+
+  Enter a value: subnet-01
+
+
+Terraform used the selected providers to generate the following execution plan. Resource
+actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # google_dataproc_cluster.tbd-dataproc-cluster will be created
+  + resource "google_dataproc_cluster" "tbd-dataproc-cluster" {
+      + effective_labels              = (known after apply)
+      + graceful_decommission_timeout = "0s"
+      + id                            = (known after apply)
+      + name                          = "tbd-cluster"
+      + project                       = "tbd-2025l-310979"
+      + region                        = "europe-west1"
+      + terraform_labels              = (known after apply)
+
+      + cluster_config {
+          + bucket      = (known after apply)
+          + temp_bucket = (known after apply)
+
+          + auxiliary_node_groups (known after apply)
+
+          + dataproc_metric_config (known after apply)
+
+          + endpoint_config (known after apply)
+
+          + gce_cluster_config {
+              + internal_ip_only       = true
+              + metadata               = {
+                  + "PIP_PACKAGES" = "pandas<2 mlflow==2.3.1 google-cloud-storage==2.9.0"
+                  + "vmDnsSetting" = "GlobalDefault"
+                }
+              + network                = (known after apply)
+              + service_account_scopes = (known after apply)
+              + subnetwork             = "subnet-01"
+              + zone                   = (known after apply)
+
+              + node_group_affinity (known after apply)
+
+              + reservation_affinity (known after apply)
+
+              + shielded_instance_config (known after apply)
+            }
+
+          + initialization_action {
+              + script      = "gs://goog-dataproc-initialization-actions-europe-west1/python/pip-install.sh"
+              + timeout_sec = 600
+            }
+
+          + master_config {
+              + image_uri        = (known after apply)
+              + instance_names   = (known after apply)
+              + machine_type     = "e2-medium"
+              + min_cpu_platform = (known after apply)
+              + num_instances    = 1
+
+              + disk_config {
+                  + boot_disk_size_gb = 100
+                  + boot_disk_type    = "pd-standard"
+                  + num_local_ssds    = (known after apply)
+                }
+            }
+
+          + preemptible_worker_config (known after apply)
+
+          + software_config {
+              + image_version = "2.1.27-ubuntu20"
+              + properties    = (known after apply)
+            }
+
+          + worker_config {
+              + image_uri         = (known after apply)
+              + instance_names    = (known after apply)
+              + machine_type      = "e2-medium"
+              + min_cpu_platform  = (known after apply)
+              + min_num_instances = (known after apply)
+              + num_instances     = 2
+
+              + disk_config {
+                  + boot_disk_size_gb = 100
+                  + boot_disk_type    = "pd-standard"
+                  + num_local_ssds    = (known after apply)
+                }
+            }
+        }
+
+      + virtual_cluster_config (known after apply)
+    }
+
+  # google_project_service.dataproc will be created
+  + resource "google_project_service" "dataproc" {
+      + disable_on_destroy = true
+      + id                 = (known after apply)
+      + project            = "tbd-2025l-310979"
+      + service            = "dataproc.googleapis.com"
+    }
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + dataproc_cluster_name = "tbd-cluster"
+
+──────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to
+take exactly these actions if you run "terraform apply" now.
