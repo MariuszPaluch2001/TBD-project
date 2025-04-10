@@ -115,9 +115,8 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
 
     [main.tf](./modules/dataproc/main.tf)
     ```
-    spot_worker_config {
+    preemptible_worker_config {
       num_instances = var.spot_worker_count
-      machine_type  = var.machine_type
       disk_config {
         boot_disk_type    = "pd-standard"
         boot_disk_size_gb = 100
