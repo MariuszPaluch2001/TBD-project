@@ -4,36 +4,56 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
 
 1. Authors:
 
-   310866
+   - Mariusz Paluch (LIDER) - 310866
+   - Jakub Winter - 310979
+   - Barłomiej Ściseł - 310953
 
-   [***link to forked repo***](https://github.com/MariuszPaluch2001/TBD-project)
+   Link to forked repo: [https://github.com/MariuszPaluch2001/TBD-project](https://github.com/MariuszPaluch2001/TBD-project)
    
 2. Follow all steps in README.md.
 
 3. In boostrap/variables.tf add your emails to variable "budget_channels".
-
+    ```tf
+    variable "budget_channels" {
+    type        = map(string)
+    description = "Budget notification channels"
+    default = {
+        marek-wiewiorka : "marek.wiewiorka@gmail.com",
+        mariusz-paluch : "mariusz.paluch2001@gmail.com",
+        bartlomiej-scisel : "vermish9@gmail.com",
+        jakub-winter : "jakubwinter01@gmail.com",
+    }
+    }
+    ```
 4. From avaialble Github Actions select and run destroy on main branch.
+    ![img.png](doc/figures/our_destroy.png)
    
 5. Create new git branch and:
     1. Modify tasks-phase1.md file.
     
     2. Create PR from this branch to **YOUR** master and merge it to make new release. 
-    
-    ***place the screenshot from GA after succesfull application of release***
-![img.png](doc/figures/task-phase1-release-destroy-screen.png)
+    ![img.png](doc/figures/task-phase1-release-destroy-screen.png)
 
 
 6. Analyze terraform code. Play with terraform plan, terraform graph to investigate different modules.
 
-    ```bash
-    terraform graph -type=plan | dot -Tpng >graph.png
-    ```
 
-    ***describe one selected module and put the output of terraform graph for this module here***
+    Module Dataproc: 
+    ```bash
+    terraform graph -type=plan | dot -Tpng >graph_plan.png # generate plan graph
+    terraform graph | dot -Tpng >graph_plan.png # generate dataproc graph
+    ```
+    ![img.png](doc/figures/graph.png)
+    ![img.png](doc/figures/graph_plan.png)
+
+    Google Dataproc is a service offered by Google in a PaaS model. Dataproc is a fully managed and scalable service for running Apache Hadoop, Apache Spark, Apache Flink, Presto, and other open source tools and frameworks. There is a cluster associated with the Dataproc service, whose configuration is stored using the terraform code. The creation and use of Google Dataproc is therefore very simple, just specify the cluster and use the ready-to-use service.
    
 7. Reach YARN UI
-   
-   ***place the command you used for setting up the tunnel, the port and the screenshot of YARN UI here***
+   ```bash
+   gcloud compute ssh tbd-cluster-m --zone "europe-west1-c" --tunnel-through-iap --project "tbd-2025l-310979" -- -L 8088:localhost:8088 
+    ```
+    ![img.png](doc/figures/yarn.png)
+
    
 8. Draw an architecture diagram (e.g. in draw.io) that includes:
     1. VPC topology with service assignment to subnets
@@ -41,14 +61,12 @@ IMPORTANT ❗ ❗ ❗ Please remember to destroy all the resources after each wo
     3. List of buckets for disposal
     4. Description of network communication (ports, why it is necessary to specify the host for the driver) of Apache Spark running from Vertex AI Workbech
   
-    ***place your diagram here***
+    ![img.png](doc/figures/project.png)
 
 9. Create a new PR and add costs by entering the expected consumption into Infracost
 For all the resources of type: `google_artifact_registry`, `google_storage_bucket`, `google_service_networking_connection`
 create a sample usage profiles and add it to the Infracost task in CI/CD pipeline. Usage file [example](https://github.com/infracost/infracost/blob/master/infracost-usage-example.yml) 
-
-   ***place the expected consumption you entered here***
-  ```yaml
+ ```yaml
     version: 0.1
     resource_usage:
     google_artifact_registry_repository.registry:
@@ -71,11 +89,9 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
     google_service_networking_connection.my_connection:
         monthly_egress_data_transfer_gb:  250
   ```
-
-   ***place the screenshot from infracost output here***
 ![img.png](doc/figures/infracost-output.png)
 
-10. Create a BigQuery dataset and an external table using SQL
+1.   Create a BigQuery dataset and an external table using SQL
     
     apply resources
 
@@ -83,11 +99,11 @@ create a sample usage profiles and add it to the Infracost task in CI/CD pipelin
    
     ***why does ORC not require a table schema?***
 
-11. Find and correct the error in spark-job.py
+2.   Find and correct the error in spark-job.py
 
     ***describe the cause and how to find the error***
 
-12. Add support for preemptible/spot instances in a Dataproc cluster
+3.   Add support for preemptible/spot instances in a Dataproc cluster
 
     ***place the link to the modified file and inserted terraform code***
     
